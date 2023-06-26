@@ -58,16 +58,40 @@ namespace Role_Playing_Game_API.Service
             {
                 Character character = characters.FirstOrDefault(character => character.Id == updateCharacter.Id);
 
-                //character.Name = updateCharacter.Name;
-                //character.HitPoints = updateCharacter.HitPoints;
-                //character.Strength = updateCharacter.Strength;
-                //character.Defense = updateCharacter.Defense;
-                //character.Class = updateCharacter.Class;
+                character.Name = updateCharacter.Name;
+                character.HitPoints = updateCharacter.HitPoints;
+                character.Strength = updateCharacter.Strength;
+                character.Defense = updateCharacter.Defense;
+                character.Class = updateCharacter.Class;
 
-                _mapper.Map(updateCharacter, character);
+                //_mapper.Map(updateCharacter, character);
 
                 response.Data = _mapper.Map<GetCharacterDto>(character);
 
+
+            }
+            catch (Exception ex)
+            {
+
+                response.Success = false;
+                response.Message = ex.Message;
+
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter(int id)
+        {
+            var response = new ServiceResponse<List<GetCharacterDto>>();
+            try
+            {
+                // FirstOrDefault return null if no elements was found while First throws an exception
+                Character character = characters.First(character => character.Id == id);
+
+                characters.Remove(character); 
+                
+                response.Data = characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
 
             }
             catch (Exception ex)
