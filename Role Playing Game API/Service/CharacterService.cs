@@ -11,21 +11,28 @@ namespace Role_Playing_Game_API.Service
             new Character { Id = 1, Name = "Sam" }
         };
 
-        public async Task<List<Character>> AddCharacter(Character newCharacter)
+        public async Task<ServiceResponse<List<Character>>> AddCharacter(Character newCharacter)
         {
+            var response = new ServiceResponse<List<Character>>();
             characters.Add(newCharacter);
 
-            return characters;
+            response.Data = characters;
+
+            return response;
         }
 
-        public async Task<List<Character>> GetAllCharacters()
+        public async Task<ServiceResponse<List<Character>>> GetAllCharacters()
         {
-            return characters;
+            return new ServiceResponse<List<Character>> { Data = characters }; 
         }
 
-        public async Task<Character> GetCharacterById(int id)
+        public async Task<ServiceResponse<Character>> GetCharacterById(int id)
         {
-            return characters.FirstOrDefault(character => character.Id == id);
+            var response = new ServiceResponse<Character>();
+            var character = characters.FirstOrDefault(character => character.Id == id);
+            response.Data = character;
+
+            return response;
         }
     }
 }

@@ -18,13 +18,13 @@ namespace Role_Playing_Game_API.Controllers
 
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<List<Character>>> Get()
+        public async Task<ActionResult<ServiceResponse<List<Character>>>> Get()
         {
             return Ok(await _characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Character>> GetById(int id)
+        public async Task<ActionResult<ServiceResponse<Character>>> GetById(int id)
         {
             return Ok(await _characterService.GetCharacterById(id));
 
@@ -32,7 +32,7 @@ namespace Role_Playing_Game_API.Controllers
 
         [HttpPost]
         [ProducesResponseType(201)]
-        public async Task<ActionResult<List<Character>>> AddCharacter(Character character)
+        public async Task<ActionResult<ServiceResponse<List<Character>>>> AddCharacter(Character character)
         {
             return Ok(await _characterService.AddCharacter(character));
         }
