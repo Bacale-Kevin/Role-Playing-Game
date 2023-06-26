@@ -58,11 +58,13 @@ namespace Role_Playing_Game_API.Service
             {
                 Character character = characters.FirstOrDefault(character => character.Id == updateCharacter.Id);
 
-                character.Name = updateCharacter.Name;
-                character.HitPoints = updateCharacter.HitPoints;
-                character.Strength = updateCharacter.Strength;
-                character.Defense = updateCharacter.Defense;
-                character.Class = updateCharacter.Class;
+                //character.Name = updateCharacter.Name;
+                //character.HitPoints = updateCharacter.HitPoints;
+                //character.Strength = updateCharacter.Strength;
+                //character.Defense = updateCharacter.Defense;
+                //character.Class = updateCharacter.Class;
+
+                _mapper.Map(updateCharacter, character);
 
                 response.Data = _mapper.Map<GetCharacterDto>(character);
 
