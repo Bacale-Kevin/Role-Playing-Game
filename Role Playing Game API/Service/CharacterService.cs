@@ -50,5 +50,33 @@ namespace Role_Playing_Game_API.Service
 
             return response;
         }
+
+        public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter(UpdateCharacterDto updateCharacter)
+        {
+            var response = new ServiceResponse<GetCharacterDto>();
+            try
+            {
+                Character character = characters.FirstOrDefault(character => character.Id == updateCharacter.Id);
+
+                character.Name = updateCharacter.Name;
+                character.HitPoints = updateCharacter.HitPoints;
+                character.Strength = updateCharacter.Strength;
+                character.Defense = updateCharacter.Defense;
+                character.Class = updateCharacter.Class;
+
+                response.Data = _mapper.Map<GetCharacterDto>(character);
+
+
+            }
+            catch (Exception ex)
+            {
+
+                response.Success = false;
+                response.Message = ex.Message;
+
+            }
+
+            return response;
+        }
     }
 }
