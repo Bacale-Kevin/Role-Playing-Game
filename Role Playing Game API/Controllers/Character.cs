@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Role_Playing_Game_API.Models;
+using Role_Playing_Game_API.Service;
 
 namespace Role_Playing_Game_API.Controllers
 {
@@ -8,32 +9,32 @@ namespace Role_Playing_Game_API.Controllers
     [ApiController]
     public class CharacterController : ControllerBase
     {
-       
+        private readonly CharacterService _characterService;
+
+        public CharacterController(CharacterService characterService)
+        {
+            _characterService = characterService;
+        }
+
 
         [HttpGet("GetAll")]
         public ActionResult<List<Character>> Get()
         {
-            return Ok(characters);
+            return Ok(_characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")]
         public ActionResult<Character> GetById(int id)
         {
+            return Ok(_characterService.GetCharacterById(id));
 
-            var character = characters.FirstOrDefault(character => character.Id == id);
-
-            if(character == null) 
-                return NotFound(id.ToString());
-
-            return Ok(character);
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
         public ActionResult<List<Character>> AddCharacter(Character character)
         {
-            characters.Add(character);
-            
-            return Ok(characters);
+            return Ok(_characterService.AddCharacter(character));
         }
     }
 }

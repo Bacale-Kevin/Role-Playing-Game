@@ -1,5 +1,5 @@
-﻿using Role_Playing_Game_API.Models;
-using Role_Playing_Game_API.Service.InterFaces;
+﻿using Role_Playing_Game_API.InterFaces;
+using Role_Playing_Game_API.Models;
 
 namespace Role_Playing_Game_API.Service
 {

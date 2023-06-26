@@ -1,6 +1,6 @@
 ﻿using Role_Playing_Game_API.Models;
 
-namespace Role_Playing_Game_API.Service.InterFaces
+namespace Role_Playing_Game_API.InterFaces
 {
     public interface ICharacterService
     {
