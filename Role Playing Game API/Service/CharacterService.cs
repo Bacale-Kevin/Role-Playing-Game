@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Role_Playing_Game_API.Data;
 using Role_Playing_Game_API.Dtos.Character;
 using Role_Playing_Game_API.InterFaces;
 using Role_Playing_Game_API.Models;
@@ -9,16 +11,17 @@ namespace Role_Playing_Game_API.Service
     {
 
         private readonly IMapper _mapper;
-
+        private readonly DataContext _context;
         private static List<Character> characters = new List<Character>
         {
             new Character(),
             new Character { Id = 1, Name = "Sam" }
         };
 
-        public CharacterService(IMapper mapper)
+        public CharacterService(IMapper mapper, DataContext context)
         {
             _mapper = mapper;
+            _context = context;
         }
 
         public async Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter(AddCharacterDto newCharacter)
@@ -35,11 +38,12 @@ namespace Role_Playing_Game_API.Service
 
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
         {
-            return new ServiceResponse<List<GetCharacterDto>>
-            {
-                Data = characters
-                .Select(character => _mapper.Map<GetCharacterDto>(character)).ToList()
-            };
+            var response = new ServiceResponse<List<GetCharacterDto>>();
+            var dbCharacters = await _context.Characters.ToListAsync();
+
+            response.Data = dbCharacters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
+
+            return response;
         }
 
         public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
@@ -89,8 +93,8 @@ namespace Role_Playing_Game_API.Service
                 // FirstOrDefault return null if no elements was found while First throws an exception
                 Character character = characters.First(character => character.Id == id);
 
-                characters.Remove(character); 
-                
+                characters.Remove(character);
+
                 response.Data = characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
 
             }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Role_Playing_Game_API.Dtos.Character;
+using Role_Playing_Game_API.InterFaces;
 using Role_Playing_Game_API.Models;
 using Role_Playing_Game_API.Service;
 
@@ -10,9 +11,9 @@ namespace Role_Playing_Game_API.Controllers
     [ApiController]
     public class CharacterController : ControllerBase
     {
-        private readonly CharacterService _characterService;
+        private readonly ICharacterService _characterService;
 
-        public CharacterController(CharacterService characterService)
+        public CharacterController(ICharacterService characterService)
         {
             _characterService = characterService;
         }
