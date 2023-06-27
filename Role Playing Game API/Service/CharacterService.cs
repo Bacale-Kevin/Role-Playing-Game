@@ -41,10 +41,13 @@ namespace Role_Playing_Game_API.Service
             return response;
         }
 
-        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
+        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters(int userId) 
         {
+            //Only get the Character created by the authenticated user
             var response = new ServiceResponse<List<GetCharacterDto>>();
-            var dbCharacters = await _context.Characters.ToListAsync();
+            var dbCharacters = await _context.Characters
+                .Where(character => character.User.Id == userId)
+                .ToListAsync();
 
             response.Data = dbCharacters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
 
