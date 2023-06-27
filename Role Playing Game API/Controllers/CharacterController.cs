@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Role_Playing_Game_API.Data;
 using Role_Playing_Game_API.Dtos.Character;
@@ -8,6 +9,7 @@ using Role_Playing_Game_API.Service;
 
 namespace Role_Playing_Game_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CharacterController : ControllerBase
