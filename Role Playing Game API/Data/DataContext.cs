@@ -8,5 +8,6 @@ namespace Role_Playing_Game_API.Data
         public DataContext(DbContextOptions options) : base(options) { }
         
         public DbSet<Character> Characters { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
