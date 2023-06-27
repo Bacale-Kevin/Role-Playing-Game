@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Role_Playing_Game_API.Data;
 using Role_Playing_Game_API.Dtos.Character;
 using Role_Playing_Game_API.InterFaces;
 using Role_Playing_Game_API.Models;
@@ -28,6 +29,10 @@ namespace Role_Playing_Game_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetCharacterDto>>> GetById(int id)
         {
+            var response = await _characterService.GetCharacterById(id);
+            if(response.Data == null)
+                return NotFound(response);
+
             return Ok(await _characterService.GetCharacterById(id));
 
         }

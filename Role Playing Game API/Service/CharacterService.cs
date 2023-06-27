@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Role_Playing_Game_API.Data;
 using Role_Playing_Game_API.Dtos.Character;
 using Role_Playing_Game_API.InterFaces;
@@ -28,10 +30,13 @@ namespace Role_Playing_Game_API.Service
         {
             var response = new ServiceResponse<List<GetCharacterDto>>();
             Character character = _mapper.Map<Character>(newCharacter);
-            character.Id = characters.Max(character => character.Id) + 1;
-            characters.Add(character);
 
-            response.Data = characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
+            _context.Characters.Add(character); // Tracking data to be added to DB
+            await _context.SaveChangesAsync(); // Insert changes to the DB
+
+            response.Data = await _context.Characters
+                .Select(character => _mapper.Map<GetCharacterDto>(character))
+                .ToListAsync();
 
             return response;
         }
@@ -49,9 +54,18 @@ namespace Role_Playing_Game_API.Service
         public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
         {
             var response = new ServiceResponse<GetCharacterDto>();
-            var character = characters.FirstOrDefault(character => character.Id == id);
-            response.Data = _mapper.Map<GetCharacterDto>(character);
+            try
+            {
+                var dbCharacter = await _context.Characters.FirstOrDefaultAsync(character => character.Id == id);
+                response.Data = _mapper.Map<GetCharacterDto>(dbCharacter);
 
+            }
+            catch (Exception ex)
+            {
+
+                response.Success = false;
+                response.Message = "Not Found";
+            }
             return response;
         }
 
@@ -60,7 +74,8 @@ namespace Role_Playing_Game_API.Service
             var response = new ServiceResponse<GetCharacterDto>();
             try
             {
-                Character character = characters.FirstOrDefault(character => character.Id == updateCharacter.Id);
+                var character = await _context.Characters
+                    .FirstOrDefaultAsync(character => character.Id == updateCharacter.Id);
 
                 character.Name = updateCharacter.Name;
                 character.HitPoints = updateCharacter.HitPoints;
@@ -68,8 +83,8 @@ namespace Role_Playing_Game_API.Service
                 character.Defense = updateCharacter.Defense;
                 character.Class = updateCharacter.Class;
 
-                //_mapper.Map(updateCharacter, character);
-
+                await _context.SaveChangesAsync();
+                 
                 response.Data = _mapper.Map<GetCharacterDto>(character);
 
 
@@ -91,11 +106,15 @@ namespace Role_Playing_Game_API.Service
             try
             {
                 // FirstOrDefault return null if no elements was found while First throws an exception
-                Character character = characters.First(character => character.Id == id);
+                var character = await _context.Characters
+                    .FirstAsync(character => character.Id == id);
 
-                characters.Remove(character);
+                _context.Characters.Remove(character);
 
-                response.Data = characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
+                await _context.SaveChangesAsync();
+
+                response.Data = await _context.Characters
+                    .Select(character => _mapper.Map<GetCharacterDto>(character)).ToListAsync();
 
             }
             catch (Exception ex)
