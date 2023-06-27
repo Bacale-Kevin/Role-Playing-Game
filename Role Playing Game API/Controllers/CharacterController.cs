@@ -27,8 +27,7 @@ namespace Role_Playing_Game_API.Controllers
         {
             //ControllerBase offers a User.Claim where we can access the claim passed through jwt token
             //Here we have access to the name identifier which id the ID of the authenticated user
-            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value); 
-            return Ok(await _characterService.GetAllCharacters(userId));
+            return Ok(await _characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")]

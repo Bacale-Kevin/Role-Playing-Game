@@ -6,6 +6,7 @@ using Role_Playing_Game_API.Data;
 using Role_Playing_Game_API.Dtos.Character;
 using Role_Playing_Game_API.InterFaces;
 using Role_Playing_Game_API.Models;
+using System.Security.Claims;
 
 namespace Role_Playing_Game_API.Service
 {
@@ -14,17 +15,22 @@ namespace Role_Playing_Game_API.Service
 
         private readonly IMapper _mapper;
         private readonly DataContext _context;
+        private readonly HttpContextAccessor _httpContextAccessor;
         private static List<Character> characters = new List<Character>
         {
             new Character(),
             new Character { Id = 1, Name = "Sam" }
         };
 
-        public CharacterService(IMapper mapper, DataContext context)
+        public CharacterService(IMapper mapper, DataContext context, HttpContextAccessor httpContextAccessor)
         {
             _mapper = mapper;
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User
+            .FindFirstValue(ClaimTypes.NameIdentifier)); 
 
         public async Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter(AddCharacterDto newCharacter)
         {
@@ -41,12 +47,12 @@ namespace Role_Playing_Game_API.Service
             return response;
         }
 
-        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters(int userId) 
+        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters() 
         {
             //Only get the Character created by the authenticated user
             var response = new ServiceResponse<List<GetCharacterDto>>();
             var dbCharacters = await _context.Characters
-                .Where(character => character.User.Id == userId)
+                .Where(character => character.User.Id == GetUserId())
                 .ToListAsync();
 
             response.Data = dbCharacters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();

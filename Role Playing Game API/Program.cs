@@ -43,6 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false
         };
     });
+builder.Services.AddHttpContextAccessor(); // Make it possible to pass the user claims to the service (Repository)
 
 var app = builder.Build();
 
