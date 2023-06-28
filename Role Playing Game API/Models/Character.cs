@@ -14,5 +14,7 @@
 
         public Weapon? Weapon { get; set; }
 
+        public List<Skill> skills { get; set; }
+
     }
 }
