@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Role_Playing_Game_API.Dtos.Character;
+using Role_Playing_Game_API.Dtos.Weapon;
 using Role_Playing_Game_API.Models;
 
 namespace Role_Playing_Game_API
@@ -11,6 +12,8 @@ namespace Role_Playing_Game_API
             CreateMap<Character, GetCharacterDto>();
             CreateMap<AddCharacterDto, Character>();
             CreateMap<UpdateCharacterDto, Character>();
+            CreateMap<Weapon, GetWeaponDto>();
+
         }
     }
 }
