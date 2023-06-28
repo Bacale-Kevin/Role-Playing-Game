@@ -56,10 +56,13 @@ namespace Role_Playing_Game_API.Service
             //Only get the Character created by the authenticated user
             var response = new ServiceResponse<List<GetCharacterDto>>();
             var dbCharacters = await _context.Characters
+                 .Include(character => character.Weapon)
+                 .Include(character => character.skills)
                 .Where(character => character.User.Id == GetUserId())
                 .ToListAsync();
 
-            response.Data = dbCharacters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
+            response.Data = dbCharacters
+                .Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
 
             return response;
         }
@@ -70,6 +73,8 @@ namespace Role_Playing_Game_API.Service
             try
             {
                 var dbCharacter = await _context.Characters
+                    .Include(character => character.Weapon)
+                    .Include(character => character.skills)
                     .FirstOrDefaultAsync(character => character.Id == id && character.User.Id == GetUserId()); // Only get or see the character created by user
                 response.Data = _mapper.Map<GetCharacterDto>(dbCharacter);
 
@@ -165,6 +170,50 @@ namespace Role_Playing_Game_API.Service
                 response.Success = false;
                 response.Message = ex.Message;
 
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<GetCharacterDto>> AddCharacterSkill(AddCharacterSkillDto newCharacterSkill)
+        {
+            var response = new ServiceResponse<GetCharacterDto>();
+
+            try
+            {
+                var character = await _context.Characters
+                    .Include(character => character.Weapon)
+                    .Include(character => character.skills) // ThenInclude() it can be access further nested related data
+                    .FirstOrDefaultAsync(character => character.Id == newCharacterSkill.CharacterId &&
+                    character.User.Id == GetUserId());
+
+                if (character == null)
+                {
+                    response.Success = false;
+                    response.Message = "Character not found";
+
+                    return response;
+                }
+
+                var skill = await _context.Skills.FirstOrDefaultAsync(skill => skill.Id == newCharacterSkill.SkillId);
+
+                if (skill == null)
+                {
+                    response.Success = false;
+                    response.Message = "Skill not found";
+
+                    return response;
+                }
+
+                character.skills.Add(skill);
+                await _context.SaveChangesAsync();
+                response.Data = _mapper.Map<GetCharacterDto>(character);
+            }
+            catch (Exception ex)
+            {
+
+                response.Success = false;
+                response.Message = ex.Message;
             }
 
             return response;

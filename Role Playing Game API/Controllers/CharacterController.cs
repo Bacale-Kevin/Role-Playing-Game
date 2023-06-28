@@ -34,7 +34,7 @@ namespace Role_Playing_Game_API.Controllers
         public async Task<ActionResult<ServiceResponse<GetCharacterDto>>> GetById(int id)
         {
             var response = await _characterService.GetCharacterById(id);
-            if(response.Data == null)
+            if (response.Data == null)
                 return NotFound(response);
 
             return Ok(await _characterService.GetCharacterById(id));
@@ -67,6 +67,12 @@ namespace Role_Playing_Game_API.Controllers
 
             return Ok(response);
 
+        }
+
+        [HttpPost("skill")]
+        public async Task<ActionResult<ServiceResponse<GetCharacterDto>>> AddCharacterSkill(AddCharacterSkillDto newCharacterSkill)
+        {
+            return Ok(await _characterService.AddCharacterSkill(newCharacterSkill));
         }
     }
 }
