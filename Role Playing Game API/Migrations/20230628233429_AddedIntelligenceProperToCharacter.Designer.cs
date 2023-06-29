@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Role_Playing_Game_API.Data;
 
@@ -11,9 +12,11 @@ using Role_Playing_Game_API.Data;
 namespace Role_Playing_Game_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230628233429_AddedIntelligenceProperToCharacter")]
+    partial class AddedIntelligenceProperToCharacter
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,12 +30,12 @@ namespace Role_Playing_Game_API.Migrations
                     b.Property<int>("CharactersId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SkillsId")
+                    b.Property<int>("skillsId")
                         .HasColumnType("int");
 
-                    b.HasKey("CharactersId", "SkillsId");
+                    b.HasKey("CharactersId", "skillsId");
 
-                    b.HasIndex("SkillsId");
+                    b.HasIndex("skillsId");
 
                     b.ToTable("CharacterSkill");
                 });
@@ -48,13 +51,7 @@ namespace Role_Playing_Game_API.Migrations
                     b.Property<int>("Class")
                         .HasColumnType("int");
 
-                    b.Property<int>("Defeats")
-                        .HasColumnType("int");
-
                     b.Property<int>("Defense")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Fights")
                         .HasColumnType("int");
 
                     b.Property<int>("HitPoints")
@@ -71,9 +68,6 @@ namespace Role_Playing_Game_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Victories")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -184,7 +178,7 @@ namespace Role_Playing_Game_API.Migrations
 
                     b.HasOne("Role_Playing_Game_API.Models.Skill", null)
                         .WithMany()
-                        .HasForeignKey("SkillsId")
+                        .HasForeignKey("skillsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

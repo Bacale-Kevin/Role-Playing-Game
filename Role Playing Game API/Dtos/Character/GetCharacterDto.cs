@@ -12,6 +12,9 @@ namespace Role_Playing_Game_API.Dtos.Character
         public int Strength { get; set; } = 10;
         public int Defense { get; set; } = 10;
         public int MyProperty { get; set; } = 10;
+        public int Fights { get; set; }
+        public int Victories { get; set; }
+        public int Defeats { get; set; }
         public RpgClass Class { get; set; } = RpgClass.Knight;
         public GetWeaponDto Weapon { get; set; }
         public List<GetSkillDto> Skills { get; set; }

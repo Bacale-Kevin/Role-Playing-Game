@@ -57,7 +57,7 @@ namespace Role_Playing_Game_API.Service
             var response = new ServiceResponse<List<GetCharacterDto>>();
             var dbCharacters = await _context.Characters
                  .Include(character => character.Weapon)
-                 .Include(character => character.skills)
+                 .Include(character => character.Skills)
                 .Where(character => character.User.Id == GetUserId())
                 .ToListAsync();
 
@@ -74,7 +74,7 @@ namespace Role_Playing_Game_API.Service
             {
                 var dbCharacter = await _context.Characters
                     .Include(character => character.Weapon)
-                    .Include(character => character.skills)
+                    .Include(character => character.Skills)
                     .FirstOrDefaultAsync(character => character.Id == id && character.User.Id == GetUserId()); // Only get or see the character created by user
                 response.Data = _mapper.Map<GetCharacterDto>(dbCharacter);
 
@@ -183,7 +183,7 @@ namespace Role_Playing_Game_API.Service
             {
                 var character = await _context.Characters
                     .Include(character => character.Weapon)
-                    .Include(character => character.skills) // ThenInclude() it can be access further nested related data
+                    .Include(character => character.Skills) // ThenInclude() it can be access further nested related data
                     .FirstOrDefaultAsync(character => character.Id == newCharacterSkill.CharacterId &&
                     character.User.Id == GetUserId());
 
@@ -205,7 +205,7 @@ namespace Role_Playing_Game_API.Service
                     return response;
                 }
 
-                character.skills.Add(skill);
+                character.Skills.Add(skill);
                 await _context.SaveChangesAsync();
                 response.Data = _mapper.Map<GetCharacterDto>(character);
             }
